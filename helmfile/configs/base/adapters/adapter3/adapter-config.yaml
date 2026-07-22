@@ -15,10 +15,6 @@ clients:
     retry_attempts: 3
     retry_backoff: exponential
 
-  broker:
-    # These values are overridden at deploy time via env vars from Helm values
-    subscription_id: "placeholder"
-    topic: "placeholder"
 
   kubernetes:
     api_version: "v1"

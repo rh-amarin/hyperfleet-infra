@@ -20,12 +20,6 @@ adapters:
             - jobs
             - jobs/status
             - pods
-        broker:
-          create: true
-          googlepubsub:
-            subscriptionId: {{ $namespace }}-clusters-cl-namespace
-            topic: {{ $namespace }}-clusters
-            deadLetterTopic: {{ $namespace }}-clusters-dlq
     setFiles:
       - name: adapterConfig.yaml
         file: configs/e2e/adapters/cl-namespace/adapter-config.yaml
@@ -45,12 +39,6 @@ adapters:
           resources:
             - namespaces
             - jobs
-        broker:
-          create: true
-          googlepubsub:
-            subscriptionId: {{ $namespace }}-clusters-cl-job
-            topic: {{ $namespace }}-clusters
-            deadLetterTopic: {{ $namespace }}-clusters-dlq
     setFiles:
       - name: adapterConfig.yaml
         file: configs/e2e/adapters/cl-job/adapter-config.yaml
@@ -72,12 +60,6 @@ adapters:
           resources:
             - deployments
             - deployments/status
-        broker:
-          create: true
-          googlepubsub:
-            subscriptionId: {{ $namespace }}-clusters-cl-deployment
-            topic: {{ $namespace }}-clusters
-            deadLetterTopic: {{ $namespace }}-clusters-dlq
     setFiles:
       - name: adapterConfig.yaml
         file: configs/e2e/adapters/cl-deployment/adapter-config.yaml
@@ -100,12 +82,6 @@ adapters:
             - namespaces
             - configmaps
             - configmaps/status
-        broker:
-          create: true
-          googlepubsub:
-            subscriptionId: {{ $namespace }}-clusters-cl-maestro
-            topic: {{ $namespace }}-clusters
-            deadLetterTopic: {{ $namespace }}-clusters-dlq
     setFiles:
       - name: adapterConfig.yaml
         file: configs/e2e/adapters/cl-maestro/adapter-config.yaml
@@ -127,12 +103,6 @@ adapters:
           resources:
             - configmaps
             - configmaps/status
-        broker:
-          create: true
-          googlepubsub:
-            subscriptionId: {{ $namespace }}-nodepools-np-configmap
-            topic: {{ $namespace }}-nodepools
-            deadLetterTopic: {{ $namespace }}-nodepools-dlq
     setFiles:
       - name: adapterConfig.yaml
         file: configs/e2e/adapters/np-configmap/adapter-config.yaml

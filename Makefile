@@ -33,9 +33,7 @@ MANIFESTS_DIR    ?= manifests
 HELM_DIR         ?= helm
 TF_DIR           ?= terraform
 
-GENERATED_RABBITMQ_DIR ?= generated-values-rabbitmq
 GENERATED_DIR ?= generated-values-from-terraform
-RABBITMQ_URL ?=  "amqp://guest:guest@rabbitmq:5672"
 MAESTRO_CONSUMER ?= cluster1
 MAESTRO_NAMESPACE ?= maestro
 KUBECONFIG ?= $(HOME)/.kube/config
@@ -187,17 +185,6 @@ uninstall-maestro: check-helm uninstall-applied-manifest-crd ## Uninstall Maestr
 	helm uninstall $(MAESTRO_NAMESPACE)-maestro --namespace $(MAESTRO_NAMESPACE) || true
 
 
-# ==== RabbitMQ Components ====
-.PHONY: generate-rabbitmq-values
-generate-rabbitmq-values: ## Generate Helm values for RabbitMQ deployments (HELMFILE_ENV=kind only)
-ifeq ($(HELMFILE_ENV),kind)
-	./scripts/generate-rabbitmq-values.sh \
-		--rabbitmq-url $(RABBITMQ_URL) \
-		--namespace $(NAMESPACE)
-else
-	@echo "OK: generate-rabbitmq-values is not supported for HELMFILE_ENV=$(HELMFILE_ENV)"
-endif
-
 
 # ==== Hyperfleet Targets ====
 # add-helm-repo: add a helm repo for a component
@@ -210,7 +197,6 @@ endef
 .PHONY: install-repos
 install-repos: check-helmfile-env ## Add all hyperfleet helm repos
 	$(call add-helm-repo,api,$(API_CHART_REF))
-	$(call add-helm-repo,sentinel,$(SENTINEL_CHART_REF))
 	$(call add-helm-repo,adapter,$(ADAPTER_CHART_REF))
 
 .PHONY: install-hyperfleet
@@ -220,10 +206,6 @@ install-hyperfleet: check-helmfile-env check-hyperfleet-namespace check-jwt-conf
 .PHONY: install-api
 install-api: check-helmfile-env check-jwt-config ## Install HyperFleet API
 	helmfile apply -f helmfile/helmfile.yaml.gotmpl -e $(HELMFILE_ENV) -l component=api
-
-.PHONY: install-sentinels
-install-sentinels: check-helmfile-env ## Install Hyperfleet Sentinels
-	helmfile apply -f helmfile/helmfile.yaml.gotmpl -e $(HELMFILE_ENV) -l component=sentinel
 
 .PHONY: install-adapters
 install-adapters: check-helmfile-env ## Install Hyperfleet Adapters
@@ -236,10 +218,6 @@ uninstall-hyperfleet: check-kubectl-context ## Uninstall all HyperFleet componen
 .PHONY: uninstall-api
 uninstall-api: check-kubectl-context ## Uninstall Hyperfleet API
 	helmfile -f helmfile/helmfile.yaml.gotmpl -e $(HELMFILE_ENV) -l component=api destroy
-
-.PHONY: uninstall-sentinels
-uninstall-sentinels: check-kubectl-context ## Uninstall Hyperfleet Sentinels
-	helmfile -f helmfile/helmfile.yaml.gotmpl -e $(HELMFILE_ENV) -l component=sentinel destroy
 
 .PHONY: uninstall-adapters
 uninstall-adapters: check-kubectl-context ## Uninstall Hyperfleet Adapters
@@ -322,9 +300,6 @@ check-helmfile-env-generated: ## Check that the generated directory exists based
 	@if [ "$(HELMFILE_ENV)" = "gcp" ]; then \
 		test -d $(GENERATED_DIR) || { echo "ERROR: generated-values-from-terraform directory does not exist"; exit 1; }; \
 		echo "OK: generated-values-from-terraform directory exists"; \
-	elif [ "$(HELMFILE_ENV)" = "kind" ]; then \
-		test -d $(GENERATED_RABBITMQ_DIR) || { echo "ERROR: generated-values-rabbitmq directory does not exist"; exit 1; }; \
-		echo "OK: generated-values-rabbitmq directory exists"; \
 	fi
 	@echo "OK: Did not need to validate generated values for environment: $(HELMFILE_ENV)"
 
@@ -517,7 +492,7 @@ ci-cleanup: uninstall-maestro destroy-terraform ## Ci cleanup: uninstall maestro
 # Kind targets
 
 .PHONY: local-up-kind
-local-up-kind: create-kind-cluster kind-build-images install-priority-classes install-maestro-all generate-rabbitmq-values install-hyperfleet ## Full local kind setup (cluster + images + maestro + hyperfleet)
+local-up-kind: create-kind-cluster kind-build-images install-priority-classes install-maestro-all install-hyperfleet ## Full local kind setup (cluster + images + maestro + hyperfleet)
 
 .PHONY: local-down-kind
 local-down-kind: uninstall-hyperfleet uninstall-maestro delete-kind-cluster ## Tear down kind: uninstall all + delete cluster

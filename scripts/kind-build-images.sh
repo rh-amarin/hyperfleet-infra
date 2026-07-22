@@ -7,7 +7,6 @@ APP_VERSION="${APP_VERSION:-"0.0.0-dev"}"
 # Set with env.kind
 : "${REGISTRY:?REGISTRY must be set and non-empty}"
 : "${API_IMAGE_TAG:?API_IMAGE_TAG must be set and non-empty}"
-: "${SENTINEL_IMAGE_TAG:?SENTINEL_IMAGE_TAG must be set and non-empty}"
 : "${ADAPTER_IMAGE_TAG:?ADAPTER_IMAGE_TAG must be set and non-empty}"
 : "${KIND_CLUSTER_NAME:?KIND_CLUSTER_NAME must be set and non-empty}"
 
@@ -37,7 +36,7 @@ if [[ -z "${CONTAINER_TOOL}" ]]; then
 fi
 
 REPO_PREFIX="hyperfleet-"
-COMPONENTS=(api sentinel adapter)
+COMPONENTS=(api adapter)
 
 component_repo() {
     echo "${REPO_PREFIX}${1}"

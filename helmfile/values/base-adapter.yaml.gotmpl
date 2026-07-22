@@ -17,19 +17,6 @@ adapterConfig:
       audience: hyperfleet-api
   {{ end }}
 
-broker:
-  type: {{ .Values.brokerType }}
-  {{ if eq .Values.brokerType "googlepubsub" }}
-  googlepubsub:
-    projectId: {{ .Values.projectId }}
-    deadLetterTopic: ""
-    createTopicIfMissing: true
-    createSubscriptionIfMissing: true
-  {{ end }}
-  {{ if eq .Values.brokerType "rabbitmq" }}
-  rabbitmq:
-    url: {{ env "RABBITMQ_URL" | default "amqp://guest:guest@rabbitmq:5672" }}
-  {{ end }}
 env:
   - name: SIMULATE_RESULT
     value: success
