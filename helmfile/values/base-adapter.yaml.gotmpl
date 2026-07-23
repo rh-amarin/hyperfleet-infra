@@ -7,6 +7,9 @@ image:
   pullPolicy: {{ env "IMAGE_PULL_POLICY" | default "IfNotPresent" }}
 
 
+broker:
+  create: false
+
 adapterConfig:
   log:
     level: debug
