@@ -17,7 +17,7 @@ config:
       required_adapters:
         {{- range .Values.adapters }}
         {{- if eq .resourceType "clusters" }}
-        {{ .name }}: "http://{{ .name }}.{{ $.Values.namespace }}.svc.cluster.local:8082"
+        {{ .name }}: "http://{{ .name }}-hyperfleet-adapter.{{ $.Values.namespace }}.svc.cluster.local:8082"
         {{- end }}
         {{- end }}
       name_min_len: 3
@@ -31,7 +31,7 @@ config:
       required_adapters:
         {{- range .Values.adapters }}
         {{- if eq .resourceType "nodepools" }}
-        {{ .name }}: "http://{{ .name }}.{{ $.Values.namespace }}.svc.cluster.local:8082"
+        {{ .name }}: "http://{{ .name }}-hyperfleet-adapter.{{ $.Values.namespace }}.svc.cluster.local:8082"
         {{- end }}
         {{- end }}
       name_min_len: 3
