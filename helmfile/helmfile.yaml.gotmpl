@@ -46,17 +46,13 @@ commonLabels:
 
 ---
 
-repositories:
-  - name: hyperfleet-api
-    url: git+https://github.com/{{ .Values.chartOrg }}/hyperfleet-api@charts?ref={{ .Values.charts.api.chartRef }}&sparse=0
-  - name: hyperfleet-adapter
-    url: git+https://github.com/{{ .Values.chartOrg }}/hyperfleet-adapter@charts?ref={{ .Values.charts.adapter.chartRef }}&sparse=0
+repositories: []
 
 releases:
   # HyperFleet API
   - name: hyperfleet-api
     namespace: {{ .Values.namespace }}
-    chart: hyperfleet-api/hyperfleet-api
+    chart: ../../hyperfleet-api/charts
     labels:
       component: api
     values:
@@ -65,7 +61,7 @@ releases:
 {{ range .Values.adapters }}
   - name: {{ .name }}
     namespace: {{ $.Values.namespace }}
-    chart: hyperfleet-adapter/hyperfleet-adapter
+    chart: ../../hyperfleet-adapter/charts
     labels:
       component: adapter
     values:

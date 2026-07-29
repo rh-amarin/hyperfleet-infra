@@ -17,7 +17,7 @@ config:
       required_adapters:
         {{- range .Values.adapters }}
         {{- if eq .resourceType "clusters" }}
-        {{ .name }}: "http://{{ .name }}-hyperfleet-adapter.{{ $.Values.namespace }}.svc.cluster.local:8082"
+        {{ .name }}: ""
         {{- end }}
         {{- end }}
       name_min_len: 3
@@ -31,7 +31,7 @@ config:
       required_adapters:
         {{- range .Values.adapters }}
         {{- if eq .resourceType "nodepools" }}
-        {{ .name }}: "http://{{ .name }}-hyperfleet-adapter.{{ $.Values.namespace }}.svc.cluster.local:8082"
+        {{ .name }}: ""
         {{- end }}
         {{- end }}
       name_min_len: 3
@@ -52,7 +52,6 @@ config:
     enabled: true
     poll_interval: {{ env "RECONCILER_POLL_INTERVAL" | default "30s" }}
     stale_threshold: {{ env "RECONCILER_STALE_THRESHOLD" | default "30m" }}
-    http_timeout: {{ env "RECONCILER_HTTP_TIMEOUT" | default "5s" }}
   {{ if eq (env "JWT_AUTH_ENABLED" | default "false") "true" }}
   server:
     jwt:
